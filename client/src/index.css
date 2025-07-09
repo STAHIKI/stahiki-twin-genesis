@@ -152,4 +152,22 @@ All colors MUST be HSL.
       opacity: .5;
     }
   }
+
+  /* Responsive design improvements */
+  @media (max-width: 768px) {
+    .sidebar-collapsed {
+      transform: translateX(-100%);
+    }
+  }
+
+  /* Smooth scrolling for better UX */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Improved focus states for accessibility */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
 }

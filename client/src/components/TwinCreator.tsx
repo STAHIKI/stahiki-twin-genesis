@@ -76,7 +76,7 @@ const TwinCreator = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 space-y-6 max-w-7xl mx-auto">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">

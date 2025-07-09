@@ -30,7 +30,7 @@ const Header = () => {
     }
   };
   return (
-    <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
+    <header className="h-16 bg-card/95 backdrop-blur-sm border-b border-border flex items-center justify-between px-6 sticky top-0 z-40">
       {/* Left Section - Current View */}
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-3">
@@ -40,7 +40,7 @@ const Header = () => {
       </div>
 
       {/* Center Section - Search */}
-      <div className="flex-1 max-w-md mx-8">
+      <div className="flex-1 max-w-md mx-8 hidden md:block">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 
@@ -55,11 +55,21 @@ const Header = () => {
         <Button 
           variant="glow" 
           size="sm" 
-          className="gap-2"
+          className="gap-2 hidden sm:flex"
           onClick={() => setActiveView("twin-creator")}
         >
           <Plus className="w-4 h-4" />
-          Create Twin
+          <span className="hidden lg:inline">Create Twin</span>
+        </Button>
+        
+        {/* Mobile Create Button */}
+        <Button 
+          variant="glow" 
+          size="sm" 
+          className="sm:hidden"
+          onClick={() => setActiveView("twin-creator")}
+        >
+          <Plus className="w-4 h-4" />
         </Button>
         
         <div className="flex items-center gap-2">

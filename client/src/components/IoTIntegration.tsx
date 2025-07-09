@@ -156,7 +156,7 @@ const IoTIntegration = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* Add New Device */}
       <Card>
         <CardHeader>
