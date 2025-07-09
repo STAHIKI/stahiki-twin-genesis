@@ -30,7 +30,10 @@ const Analytics = () => {
       change: "+2.3%",
       trend: "up",
       icon: Activity,
-      description: "Overall system efficiency"
+      description: "Overall system efficiency",
+      color: "text-emerald-500",
+      bgColor: "bg-emerald-500/10",
+      borderColor: "border-emerald-500/20"
     },
     {
       title: "Data Processing Rate",
@@ -38,7 +41,10 @@ const Analytics = () => {
       change: "+15.7%",
       trend: "up",
       icon: Database,
-      description: "Data points processed per hour"
+      description: "Data points processed per hour",
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10",
+      borderColor: "border-blue-500/20"
     },
     {
       title: "Response Time",
@@ -46,7 +52,10 @@ const Analytics = () => {
       change: "-12ms",
       trend: "down",
       icon: Clock,
-      description: "Average API response time"
+      description: "Average API response time",
+      color: "text-purple-500",
+      bgColor: "bg-purple-500/10",
+      borderColor: "border-purple-500/20"
     },
     {
       title: "Active Connections",
@@ -54,7 +63,10 @@ const Analytics = () => {
       change: "+8",
       trend: "up",
       icon: Zap,
-      description: "Live IoT device connections"
+      description: "Live IoT device connections",
+      color: "text-orange-500",
+      bgColor: "bg-orange-500/10",
+      borderColor: "border-orange-500/20"
     }
   ];
 
@@ -157,26 +169,33 @@ const Analytics = () => {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {kpiData.map((kpi, index) => (
-          <Card key={index}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{kpi.title}</CardTitle>
-              <kpi.icon className="w-4 h-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{kpi.value}</div>
-              <div className="flex items-center gap-2">
-                {kpi.trend === "up" ? (
-                  <TrendingUp className="w-4 h-4 text-success" />
-                ) : (
-                  <TrendingDown className="w-4 h-4 text-success" />
-                )}
-                <span className="text-xs text-muted-foreground">{kpi.change}</span>
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">{kpi.description}</p>
-            </CardContent>
-          </Card>
-        ))}
+        {kpiData.map((kpi, index) => {
+          const Icon = kpi.icon;
+          return (
+            <Card key={index} className={`relative overflow-hidden border-l-4 ${kpi.borderColor} ${kpi.bgColor}/20`}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{kpi.title}</CardTitle>
+                <div className={`p-2 rounded-lg ${kpi.bgColor}`}>
+                  <Icon className={`w-4 h-4 ${kpi.color}`} />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className={`text-2xl font-bold ${kpi.color}`}>{kpi.value}</div>
+                <div className="flex items-center gap-2">
+                  {kpi.trend === "up" ? (
+                    <TrendingUp className="w-4 h-4 text-emerald-500" />
+                  ) : (
+                    <TrendingDown className="w-4 h-4 text-red-500" />
+                  )}
+                  <span className={`text-xs font-medium ${kpi.trend === "up" ? "text-emerald-600" : "text-red-600"}`}>
+                    {kpi.change}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">{kpi.description}</p>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       <Tabs defaultValue="performance" className="w-full">
@@ -201,17 +220,28 @@ const Analytics = () => {
             </CardHeader>
             <CardContent>
               <div className="h-64 w-full bg-gradient-to-br from-background to-accent/10 rounded-lg border border-border/50 p-6">
-                {/* Simulated Chart */}
+                {/* Colorful Chart Bars */}
                 <div className="flex items-end justify-between h-full">
-                  {performanceData.map((point, index) => (
-                    <div key={index} className="flex flex-col items-center gap-2">
-                      <div 
-                        className="bg-primary/60 rounded-t w-8 transition-all hover:bg-primary"
-                        style={{ height: `${(point.value / 100) * 180}px` }}
-                      ></div>
-                      <div className="text-xs text-muted-foreground">{point.time}</div>
-                    </div>
-                  ))}
+                  {performanceData.map((point, index) => {
+                    const colors = [
+                      "bg-gradient-to-t from-blue-500 to-blue-400",
+                      "bg-gradient-to-t from-emerald-500 to-emerald-400", 
+                      "bg-gradient-to-t from-purple-500 to-purple-400",
+                      "bg-gradient-to-t from-orange-500 to-orange-400",
+                      "bg-gradient-to-t from-pink-500 to-pink-400",
+                      "bg-gradient-to-t from-cyan-500 to-cyan-400",
+                      "bg-gradient-to-t from-violet-500 to-violet-400"
+                    ];
+                    return (
+                      <div key={index} className="flex flex-col items-center gap-2">
+                        <div 
+                          className={`${colors[index]} rounded-t w-8 transition-all hover:scale-110 hover:shadow-lg`}
+                          style={{ height: `${(point.value / 100) * 180}px` }}
+                        ></div>
+                        <div className="text-xs text-muted-foreground font-medium">{point.time}</div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </CardContent>
@@ -250,10 +280,10 @@ const Analytics = () => {
                   <div>
                     <div className="flex justify-between mb-1">
                       <span className="text-sm">CPU Usage</span>
-                      <span className="text-sm">73%</span>
+                      <span className="text-sm font-bold text-orange-600">73%</span>
                     </div>
-                    <div className="w-full bg-secondary rounded-full h-2">
-                      <div className="bg-primary h-2 rounded-full" style={{ width: "73%" }}></div>
+                    <div className="w-full bg-secondary rounded-full h-3">
+                      <div className="bg-gradient-to-r from-orange-500 to-orange-400 h-3 rounded-full transition-all duration-500" style={{ width: "73%" }}></div>
                     </div>
                   </div>
                   <div>

@@ -106,23 +106,34 @@ const Dashboard = () => {
 
       {/* KPIs Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {kpis.map((kpi, index) => (
-          <Card key={index} className="bg-gradient-to-br from-card to-card/50 border-border/50">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {kpi.title}
-              </CardTitle>
-              <kpi.icon className={`w-4 h-4 ${kpi.color}`} />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-foreground">{kpi.value}</div>
-              <p className="text-xs text-muted-foreground">
-                <TrendingUp className="w-3 h-3 inline mr-1" />
-                {kpi.change}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
+        {kpis.map((kpi, index) => {
+          const colors = [
+            { bg: "bg-emerald-500/10", icon: "text-emerald-500", border: "border-emerald-500/20" },
+            { bg: "bg-blue-500/10", icon: "text-blue-500", border: "border-blue-500/20" },
+            { bg: "bg-purple-500/10", icon: "text-purple-500", border: "border-purple-500/20" },
+            { bg: "bg-orange-500/10", icon: "text-orange-500", border: "border-orange-500/20" }
+          ];
+          const colorSet = colors[index % colors.length];
+          return (
+            <Card key={index} className={`bg-gradient-to-br from-card to-card/50 border-l-4 ${colorSet.border} ${colorSet.bg}/30`}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  {kpi.title}
+                </CardTitle>
+                <div className={`p-2 rounded-lg ${colorSet.bg}`}>
+                  <kpi.icon className={`w-4 h-4 ${colorSet.icon}`} />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className={`text-2xl font-bold ${colorSet.icon}`}>{kpi.value}</div>
+                <p className="text-xs text-emerald-600 font-medium flex items-center">
+                  <TrendingUp className="w-3 h-3 mr-1" />
+                  {kpi.change}
+                </p>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       {/* Main Content Grid */}
@@ -136,10 +147,10 @@ const Dashboard = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div 
-                className="p-6 rounded-lg bg-accent/30 border border-border/50 hover:bg-accent/50 transition-all cursor-pointer group"
+                className="p-6 rounded-lg bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 transition-all cursor-pointer group"
                 onClick={() => setActiveView("twin-creator")}
               >
-                <Building className="w-8 h-8 text-primary mb-4 group-hover:scale-110 transition-transform" />
+                <Building className="w-8 h-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform" />
                 <h3 className="font-semibold text-foreground mb-2">Building Design</h3>
                 <p className="text-sm text-muted-foreground">
                   Tools for architectural design and project management.
@@ -147,18 +158,18 @@ const Dashboard = () => {
               </div>
               
               <div 
-                className="p-6 rounded-lg bg-accent/30 border border-border/50 hover:bg-accent/50 transition-all cursor-pointer group"
+                className="p-6 rounded-lg bg-orange-500/10 border border-orange-500/20 hover:bg-orange-500/20 transition-all cursor-pointer group"
                 onClick={() => setActiveView("workflow")}
               >
-                <Zap className="w-8 h-8 text-warning mb-4 group-hover:scale-110 transition-transform" />
+                <Zap className="w-8 h-8 text-orange-500 mb-4 group-hover:scale-110 transition-transform" />
                 <h3 className="font-semibold text-foreground mb-2">Process Optimization</h3>
                 <p className="text-sm text-muted-foreground">
                   Features for optimizing industrial processes and monitoring equipment.
                 </p>
               </div>
               
-              <div className="p-6 rounded-lg bg-accent/30 border border-border/50 hover:bg-accent/50 transition-all cursor-pointer group">
-                <Sprout className="w-8 h-8 text-success mb-4 group-hover:scale-110 transition-transform" />
+              <div className="p-6 rounded-lg bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all cursor-pointer group">
+                <Sprout className="w-8 h-8 text-emerald-500 mb-4 group-hover:scale-110 transition-transform" />
                 <h3 className="font-semibold text-foreground mb-2">Crop Simulation</h3>
                 <p className="text-sm text-muted-foreground">
                   Options for simulating crop growth and managing resources.
@@ -175,11 +186,18 @@ const Dashboard = () => {
             <CardDescription>Your latest digital twin developments</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {recentProjects.map((project, index) => (
-              <div key={index} className="flex items-center space-x-4 p-3 rounded-lg bg-accent/20 hover:bg-accent/30 transition-colors">
-                <div className="p-2 rounded-lg bg-primary/20">
-                  <project.icon className="w-4 h-4 text-primary" />
-                </div>
+            {recentProjects.map((project, index) => {
+              const projectColors = [
+                { bg: "bg-orange-500/10", icon: "text-orange-500" },
+                { bg: "bg-blue-500/10", icon: "text-blue-500" },
+                { bg: "bg-emerald-500/10", icon: "text-emerald-500" }
+              ];
+              const colorSet = projectColors[index % projectColors.length];
+              return (
+                <div key={index} className="flex items-center space-x-4 p-3 rounded-lg bg-accent/20 hover:bg-accent/30 transition-colors">
+                  <div className={`p-2 rounded-lg ${colorSet.bg}`}>
+                    <project.icon className={`w-4 h-4 ${colorSet.icon}`} />
+                  </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
                     <p className="text-sm font-medium text-foreground truncate">
@@ -194,7 +212,8 @@ const Dashboard = () => {
                   <p className="text-xs text-muted-foreground mt-1">{project.lastUpdate}</p>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </CardContent>
         </Card>
       </div>
