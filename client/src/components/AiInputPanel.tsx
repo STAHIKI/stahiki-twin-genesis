@@ -12,12 +12,36 @@ import {
   Lightbulb,
   FileText,
   Image as ImageIcon,
-  Zap
+  Zap,
+  AlertTriangle
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import Model3DViewer from "./Model3DViewer";
+
+interface TwinModel3D {
+  id: string;
+  name: string;
+  description: string;
+  vertices: number[][];
+  faces: number[][];
+  materials: {
+    color: string;
+    metalness: number;
+    roughness: number;
+  };
+  bounds: {
+    min: [number, number, number];
+    max: [number, number, number];
+  };
+  createdAt: string;
+}
 
 const AiInputPanel = () => {
   const [prompt, setPrompt] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedModel, setGeneratedModel] = useState<TwinModel3D | null>(null);
+  const { toast } = useToast();
 
   const suggestions = [
     "Design a smart greenhouse with automated irrigation and climate control",
@@ -26,12 +50,48 @@ const AiInputPanel = () => {
     "Simulate a wind farm with weather data integration and power output optimization"
   ];
 
+  const generateTwinMutation = useMutation({
+    mutationFn: async (prompt: string) => {
+      const response = await apiRequest('/api/generate-twin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
+      });
+      return response.json();
+    },
+    onSuccess: (data) => {
+      if (data.success && data.model) {
+        setGeneratedModel(data.model);
+        toast({
+          title: "3D Model Generated!",
+          description: `Successfully created ${data.model.name}`,
+        });
+      } else {
+        throw new Error(data.error || "Failed to generate model");
+      }
+    },
+    onError: (error: any) => {
+      console.error("Generation error:", error);
+      toast({
+        title: "Generation Failed",
+        description: error.message || "Failed to generate 3D model. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleGenerate = () => {
-    setIsGenerating(true);
-    // Simulate AI generation
-    setTimeout(() => {
-      setIsGenerating(false);
-    }, 3000);
+    if (!prompt.trim()) {
+      toast({
+        title: "Prompt Required",
+        description: "Please enter a description for your digital twin",
+        variant: "destructive",
+      });
+      return;
+    }
+    generateTwinMutation.mutate(prompt.trim());
   };
 
   return (
@@ -73,9 +133,9 @@ const AiInputPanel = () => {
                 variant="glow" 
                 className="w-full gap-2"
                 onClick={handleGenerate}
-                disabled={isGenerating}
+                disabled={generateTwinMutation.isPending}
               >
-                {isGenerating ? (
+                {generateTwinMutation.isPending ? (
                   <>
                     <Zap className="w-4 h-4 animate-spin" />
                     Generating...
@@ -133,26 +193,28 @@ const AiInputPanel = () => {
         {/* Preview Section */}
         <div className="space-y-6">
           {/* 3D Preview */}
-          <Card className="h-96">
+          <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Model Preview</CardTitle>
-            </CardHeader>
-            <CardContent className="h-full">
-              <div className="w-full h-full bg-gradient-to-br from-background to-accent/20 rounded-lg border border-border/50 flex items-center justify-center">
-                {isGenerating ? (
-                  <div className="text-center">
-                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-muted-foreground">Generating 3D model...</p>
-                  </div>
-                ) : (
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Sparkles className="w-8 h-8 text-primary" />
-                    </div>
-                    <p className="text-muted-foreground">3D preview will appear here</p>
-                  </div>
+              <CardTitle className="text-lg flex items-center justify-between">
+                <span>Model Preview</span>
+                {generatedModel && (
+                  <Badge variant="secondary" className="text-xs">
+                    {generatedModel.vertices.length} vertices
+                  </Badge>
                 )}
-              </div>
+              </CardTitle>
+              {generatedModel && (
+                <CardDescription>
+                  {generatedModel.description}
+                </CardDescription>
+              )}
+            </CardHeader>
+            <CardContent>
+              <Model3DViewer 
+                model={generatedModel}
+                isGenerating={generateTwinMutation.isPending}
+                className="h-96"
+              />
             </CardContent>
           </Card>
 
