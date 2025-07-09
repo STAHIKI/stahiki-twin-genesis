@@ -35,7 +35,22 @@ const Navigation = () => {
   ];
 
   return (
-    <div className={`${isCollapsed ? 'w-16' : 'w-64'} h-screen bg-card border-r border-border flex flex-col sticky top-0 transition-all duration-300 ease-in-out shrink-0`}>
+    <div className={`${isCollapsed ? 'w-16' : 'w-64'} h-screen bg-card border-r border-border flex flex-col sticky top-0 transition-all duration-300 ease-in-out shrink-0 relative`}>
+      {/* Small Toggle Button - Strategically positioned */}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className="absolute right-1 top-3 w-5 h-5 p-0 z-20 bg-background/90 hover:bg-accent border border-border/50 rounded transition-all duration-200 shadow-sm"
+        title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+      >
+        {isCollapsed ? (
+          <ChevronRight className="w-3 h-3" />
+        ) : (
+          <ChevronLeft className="w-3 h-3" />
+        )}
+      </Button>
+
       {/* Logo and Brand */}
       <div className="p-6 border-b border-border">
         <div className="flex items-center gap-3">
@@ -44,25 +59,6 @@ const Navigation = () => {
           </div>
           {!isCollapsed && <span className="text-xl font-bold text-foreground">Stahiki</span>}
         </div>
-      </div>
-
-      {/* Collapse Toggle */}
-      <div className="p-4 border-b border-border">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className={`${isCollapsed ? 'w-8 h-8 p-0' : 'w-full'} flex items-center gap-2`}
-        >
-          {isCollapsed ? (
-            <ChevronRight className="w-4 h-4" />
-          ) : (
-            <>
-              <ChevronLeft className="w-4 h-4" />
-              <span className="text-sm">Collapse</span>
-            </>
-          )}
-        </Button>
       </div>
 
       {/* Navigation Items */}
