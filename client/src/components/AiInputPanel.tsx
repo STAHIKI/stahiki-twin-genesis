@@ -52,14 +52,14 @@ const AiInputPanel = () => {
 
   const generateTwinMutation = useMutation({
     mutationFn: async (prompt: string) => {
-      const response = await apiRequest('/api/generate-twin', {
+      const data = await apiRequest('/api/generate-twin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ prompt }),
       });
-      return response.json();
+      return data;
     },
     onSuccess: (data) => {
       if (data.success && data.model) {
