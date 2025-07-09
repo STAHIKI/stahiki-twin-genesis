@@ -4,6 +4,12 @@ import Header from "./Header";
 import Dashboard from "./Dashboard";
 import AiInputPanel from "./AiInputPanel";
 import WorkflowBuilder from "./WorkflowBuilder";
+import TwinCreator from "./TwinCreator";
+import LiveSimulation from "./LiveSimulation";
+import IoTIntegration from "./IoTIntegration";
+import APIConnections from "./APIConnections";
+import Analytics from "./Analytics";
+import Settings from "./Settings";
 
 const StahikiApp = () => {
   const [activeView, setActiveView] = useState("dashboard");
@@ -16,6 +22,18 @@ const StahikiApp = () => {
         return <AiInputPanel />;
       case "workflow":
         return <WorkflowBuilder />;
+      case "twin-creator":
+        return <TwinCreator />;
+      case "simulation":
+        return <LiveSimulation />;
+      case "iot":
+        return <IoTIntegration />;
+      case "api":
+        return <APIConnections />;
+      case "analytics":
+        return <Analytics />;
+      case "settings":
+        return <Settings />;
       default:
         return <Dashboard />;
     }
