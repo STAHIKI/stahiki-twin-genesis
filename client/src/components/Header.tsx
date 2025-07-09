@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useNavigation } from "@/lib/contexts/NavigationContext";
 import { 
   Search, 
   Bell, 
@@ -12,27 +13,30 @@ import {
 } from "lucide-react";
 
 const Header = () => {
+  const { activeView, setActiveView } = useNavigation();
+  
+  const getActiveViewTitle = () => {
+    switch(activeView) {
+      case "dashboard": return "Dashboard";
+      case "ai-input": return "AI Input Panel";
+      case "twin-creator": return "Twin Creator";
+      case "workflow": return "Workflow Builder";
+      case "simulation": return "Live Simulation";
+      case "iot": return "IoT Integration";
+      case "api": return "API Connections";
+      case "analytics": return "Analytics";
+      case "settings": return "Settings";
+      default: return "Dashboard";
+    }
+  };
   return (
     <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
-      {/* Left Section - Navigation */}
+      {/* Left Section - Current View */}
       <div className="flex items-center gap-6">
-        <nav className="flex items-center gap-1">
-          <Button variant="ghost" size="sm" className="text-foreground">
-            Dashboard
-          </Button>
-          <Button variant="ghost" size="sm" className="text-muted-foreground">
-            Twins
-          </Button>
-          <Button variant="ghost" size="sm" className="text-muted-foreground">
-            Automation
-          </Button>
-          <Button variant="ghost" size="sm" className="text-muted-foreground">
-            Marketplace
-          </Button>
-          <Button variant="ghost" size="sm" className="text-muted-foreground">
-            Docs
-          </Button>
-        </nav>
+        <div className="flex items-center gap-3">
+          <Activity className="w-5 h-5 text-primary" />
+          <h1 className="text-lg font-semibold text-foreground">{getActiveViewTitle()}</h1>
+        </div>
       </div>
 
       {/* Center Section - Search */}
@@ -48,7 +52,12 @@ const Header = () => {
 
       {/* Right Section - Actions */}
       <div className="flex items-center gap-3">
-        <Button variant="glow" size="sm" className="gap-2">
+        <Button 
+          variant="glow" 
+          size="sm" 
+          className="gap-2"
+          onClick={() => setActiveView("twin-creator")}
+        >
           <Plus className="w-4 h-4" />
           Create Twin
         </Button>
@@ -63,7 +72,11 @@ const Header = () => {
             <HelpCircle className="w-4 h-4" />
           </Button>
           
-          <Button variant="ghost" size="sm">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => setActiveView("settings")}
+          >
             <Settings className="w-4 h-4" />
           </Button>
           

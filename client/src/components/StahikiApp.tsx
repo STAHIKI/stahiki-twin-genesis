@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Navigation from "./Navigation";
 import Header from "./Header";
 import Dashboard from "./Dashboard";
@@ -10,9 +9,10 @@ import IoTIntegration from "./IoTIntegration";
 import APIConnections from "./APIConnections";
 import Analytics from "./Analytics";
 import Settings from "./Settings";
+import { NavigationProvider, useNavigation } from "@/lib/contexts/NavigationContext";
 
 const StahikiApp = () => {
-  const [activeView, setActiveView] = useState("dashboard");
+  const { activeView } = useNavigation();
 
   const renderContent = () => {
     switch (activeView) {

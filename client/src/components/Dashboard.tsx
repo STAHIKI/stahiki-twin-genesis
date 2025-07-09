@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { useNavigation } from "@/lib/contexts/NavigationContext";
 import { 
   Activity, 
   Database, 
@@ -19,6 +20,7 @@ import {
 } from "lucide-react";
 
 const Dashboard = () => {
+  const { setActiveView } = useNavigation();
   const kpis = [
     {
       title: "Active Twins",
@@ -95,7 +97,7 @@ const Dashboard = () => {
               workflow automation with 3D modeling capabilities.
             </p>
           </div>
-          <Button variant="glow" size="lg" className="gap-2">
+          <Button variant="glow" size="lg" className="gap-2" onClick={() => setActiveView("twin-creator")}>
             <Play className="w-5 h-5" />
             Start Building
           </Button>
@@ -133,7 +135,10 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-6 rounded-lg bg-accent/30 border border-border/50 hover:bg-accent/50 transition-all cursor-pointer group">
+              <div 
+                className="p-6 rounded-lg bg-accent/30 border border-border/50 hover:bg-accent/50 transition-all cursor-pointer group"
+                onClick={() => setActiveView("twin-creator")}
+              >
                 <Building className="w-8 h-8 text-primary mb-4 group-hover:scale-110 transition-transform" />
                 <h3 className="font-semibold text-foreground mb-2">Building Design</h3>
                 <p className="text-sm text-muted-foreground">
@@ -141,7 +146,10 @@ const Dashboard = () => {
                 </p>
               </div>
               
-              <div className="p-6 rounded-lg bg-accent/30 border border-border/50 hover:bg-accent/50 transition-all cursor-pointer group">
+              <div 
+                className="p-6 rounded-lg bg-accent/30 border border-border/50 hover:bg-accent/50 transition-all cursor-pointer group"
+                onClick={() => setActiveView("workflow")}
+              >
                 <Zap className="w-8 h-8 text-warning mb-4 group-hover:scale-110 transition-transform" />
                 <h3 className="font-semibold text-foreground mb-2">Process Optimization</h3>
                 <p className="text-sm text-muted-foreground">

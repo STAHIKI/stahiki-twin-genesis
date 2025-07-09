@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useNavigation } from "@/lib/contexts/NavigationContext";
 import { 
   Diamond, 
   Layers3, 
@@ -9,15 +10,24 @@ import {
   Settings,
   User,
   HelpCircle,
-  Bell
+  Bell,
+  Home,
+  Zap,
+  Play,
+  Database
 } from "lucide-react";
 
 const Navigation = () => {
+  const { activeView, setActiveView } = useNavigation();
+  
   const navItems = [
-    { icon: Diamond, label: "Twin Creation", active: true },
-    { icon: Wifi, label: "IoT Integration" },
-    { icon: Workflow, label: "Workflow Builder" },
-    { icon: Layers3, label: "API Connections" },
+    { icon: Home, label: "Dashboard", key: "dashboard" },
+    { icon: Zap, label: "AI Input", key: "ai-input" },
+    { icon: Diamond, label: "Twin Creator", key: "twin-creator" },
+    { icon: Workflow, label: "Workflow Builder", key: "workflow" },
+    { icon: Play, label: "Live Simulation", key: "simulation" },
+    { icon: Wifi, label: "IoT Integration", key: "iot" },
+    { icon: Layers3, label: "API Connections", key: "api" },
   ];
 
   return (
@@ -37,8 +47,9 @@ const Navigation = () => {
         {navItems.map((item, index) => (
           <Button
             key={index}
-            variant={item.active ? "default" : "ghost"}
+            variant={activeView === item.key ? "default" : "ghost"}
             className="w-full justify-start gap-3 h-12"
+            onClick={() => setActiveView(item.key)}
           >
             <item.icon className="w-5 h-5" />
             {item.label}
@@ -48,11 +59,19 @@ const Navigation = () => {
 
       {/* Bottom Section */}
       <div className="p-4 border-t border-border space-y-2">
-        <Button variant="ghost" className="w-full justify-start gap-3">
+        <Button 
+          variant={activeView === "analytics" ? "default" : "ghost"} 
+          className="w-full justify-start gap-3"
+          onClick={() => setActiveView("analytics")}
+        >
           <BarChart3 className="w-5 h-5" />
           Analytics
         </Button>
-        <Button variant="ghost" className="w-full justify-start gap-3">
+        <Button 
+          variant={activeView === "settings" ? "default" : "ghost"} 
+          className="w-full justify-start gap-3"
+          onClick={() => setActiveView("settings")}
+        >
           <Settings className="w-5 h-5" />
           Settings
         </Button>
