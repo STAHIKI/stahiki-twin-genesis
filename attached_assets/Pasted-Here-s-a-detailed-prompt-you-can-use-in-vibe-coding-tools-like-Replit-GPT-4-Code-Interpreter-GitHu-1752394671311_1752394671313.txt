@@ -1,0 +1,104 @@
+Here’s a detailed prompt you can use in vibe coding tools like Replit, GPT-4 Code Interpreter, GitHub Copilot Chat, Cursor IDE, or even inside your own AI pair programmer. This prompt is designed to guide the AI to build your MVP for Stahiki, your AI-native digital twin platform, by forking and integrating the open-source features we discussed.
+
+🔥 STAHIKI MVP BUILD — AI VIBE CODING PROMPT
+
+🚨 Copy and paste this into your AI coding tool (e.g., Replit AI, VS Code Copilot, or ChatGPT code interpreter) and start building interactively:
+
+💬 Prompt:
+
+You are an expert AI full-stack engineer.
+Build the MVP for a startup called Stahiki, an AI-native platform for creating digital twins for industries like smart cities, agriculture, and manufacturing.
+This MVP will:
+
+Use AI to help users generate intelligent digital twins rapidly
+
+Include drag-and-drop logic flows (via Node-RED or similar)
+
+Allow visualization and interaction with 3D twin models (e.g. of a smart farm, smart home, or city block)
+
+Sync real-time data and state using IoT protocols (MQTT, Kafka)
+
+🔧 Your task:
+
+Build a modular MVP using open-source tools and integrate them as follows:
+
+🔁 Fork and use the following:
+
+OpenTwins → Core orchestration for IoT/AI/3D digital twins
+
+Eclipse Ditto → Digital twin state management via REST/MQTT/Kafka
+
+Node-RED → For building event logic, AI-based flows, and automation
+
+PlayCanvas or Three.js → For rendering 3D twins in browser
+
+Grafana → For telemetry dashboards, monitoring twin performance
+
+⚙ Backend:
+
+Use Docker or Docker Compose to run OpenTwins, Ditto, Node-RED, and MQTT broker together.
+
+Connect Ditto with OpenTwins via Kafka or REST.
+
+Set up Node-RED with flows that subscribe to device twin state from Ditto and can trigger automations or send AI-generated suggestions.
+
+🧠 AI Layer:
+
+Add a simple AI suggestion engine (Python module or Node.js microservice) that: 
+
+Observes twin state data
+
+Suggests Node-RED flow changes or logic blocks
+
+Auto-generates simple workflows like “If humidity > 90%, turn on fan”
+
+🎨 Frontend:
+
+Use PlayCanvas (preferred) or Three.js to build a visual twin editor: 
+
+Allow users to drag farm objects (plants, irrigation pipes, sensors)
+
+View real-time state changes from Ditto API
+
+Animate responses to AI or Node-RED triggers
+
+📊 Dashboard:
+
+Run Grafana to visualize telemetry (CPU, soil moisture, device status)
+
+Connect to InfluxDB or Ditto backend for data source
+
+🔗 Deliverables:
+
+A working MVP where a user can: 
+
+Define or auto-generate a digital twin scene
+
+Attach sensor logic with Node-RED
+
+View state updates and automate responses
+
+See visual updates in 3D and on dashboard
+
+🎯 Bonus:
+
+Add a “Generate Twin” button that uses GPT or Python backend to scaffold a basic farm or city twin setup using natural language prompt
+
+Make it low-code/no-code friendly
+
+🚨 Build this in a modular monorepo structure:
+stahiki-mvp/ ├── backend/ │ ├── opentwins/ │ ├── ditto/ │ ├── mqtt-broker/ │ └── ai-agent/ ├── logic/ │ └── node-red/ ├── frontend/ │ └── playcanvas-ui/ ├── telemetry/ │ └── grafana/ └── docker-compose.yml 
+Let’s start building. First, create the monorepo, add Docker Compose, and fetch the OpenTwins and Ditto services.
+
+👨🏾‍💻 Vibe Coding Workflow Tips:
+
+ToolUse it to…ReplitQuickly test API calls, UI componentsCursor IDEBuild full-stack app with live AI assistGitHub Copilot ChatGuide with suggestions as you codeChatGPTExplain, scaffold, and debug complex setupsVS Code + CopilotBuild fast while staying flexible 
+Would you like me to:
+
+Convert this into a custom VS Code project you can run locally?
+
+Pre-fill a GitHub template repo with this scaffold?
+
+Add code snippets for Docker Compose, Node-RED flows, or AI module to get you started?
+
+Let’s build Stahiki fast and smart.

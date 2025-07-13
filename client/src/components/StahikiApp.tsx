@@ -3,6 +3,7 @@ import Header from "./Header";
 import Dashboard from "./Dashboard";
 import AiInputPanel from "./AiInputPanel";
 import WorkflowBuilder from "./WorkflowBuilder";
+import NodeRedWorkflowBuilder from "./NodeRedWorkflowBuilder";
 import TwinCreator from "./TwinCreator";
 import LiveSimulation from "./LiveSimulation";
 import IoTIntegration from "./IoTIntegration";
@@ -21,7 +22,7 @@ const StahikiApp = () => {
       case "ai-input":
         return <AiInputPanel />;
       case "workflow":
-        return <WorkflowBuilder />;
+        return <NodeRedWorkflowBuilder />;
       case "twin-creator":
         return <TwinCreator />;
       case "simulation":

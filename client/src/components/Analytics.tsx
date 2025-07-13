@@ -1,9 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { apiRequest } from "@/lib/queryClient";
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  Area,
+  AreaChart
+} from "recharts";
 import { 
   BarChart3, 
   TrendingUp, 
@@ -16,12 +35,78 @@ import {
   AlertTriangle,
   CheckCircle,
   Zap,
-  Database
+  Database,
+  Thermometer,
+  Cpu,
+  Gauge,
+  Wifi,
+  Signal,
+  HardDrive,
+  Layers,
+  Monitor,
+  Target,
+  Settings
 } from "lucide-react";
 
 const Analytics = () => {
   const [timeRange, setTimeRange] = useState("24h");
   const [selectedMetric, setSelectedMetric] = useState("performance");
+  const [selectedTwinId, setSelectedTwinId] = useState<number | null>(null);
+  const [realTimeData, setRealTimeData] = useState<any[]>([]);
+
+  // Fetch digital twins
+  const { data: digitalTwins } = useQuery({
+    queryKey: ["/api/digital-twins"],
+    queryFn: () => apiRequest("/api/digital-twins?userId=1"),
+  });
+
+  // Simulate real-time data updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newDataPoint = {
+        time: new Date().toLocaleTimeString(),
+        temperature: Math.random() * 40 + 20,
+        pressure: Math.random() * 50 + 100,
+        efficiency: Math.random() * 20 + 80,
+        power: Math.random() * 500 + 1000,
+      };
+      setRealTimeData(prev => [...prev.slice(-19), newDataPoint]);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Sample telemetry data
+  const telemetryData = [
+    { time: "00:00", temperature: 23.5, pressure: 101.3, efficiency: 89.2, power: 1250 },
+    { time: "04:00", temperature: 24.1, pressure: 102.1, efficiency: 91.5, power: 1320 },
+    { time: "08:00", temperature: 26.3, pressure: 103.8, efficiency: 94.1, power: 1180 },
+    { time: "12:00", temperature: 28.7, pressure: 105.2, efficiency: 96.3, power: 1420 },
+    { time: "16:00", temperature: 27.4, pressure: 104.6, efficiency: 93.8, power: 1380 },
+    { time: "20:00", temperature: 25.9, pressure: 103.1, efficiency: 91.2, power: 1290 },
+  ];
+
+  const performanceMetrics = [
+    { name: "Manufacturing", value: 94.2, target: 95.0, status: "warning" },
+    { name: "Energy", value: 89.7, target: 90.0, status: "error" },
+    { name: "Quality", value: 98.1, target: 97.0, status: "success" },
+    { name: "Safety", value: 99.9, target: 99.5, status: "success" },
+  ];
+
+  const distributionData = [
+    { name: "Operational", value: 78, color: "#10b981" },
+    { name: "Maintenance", value: 12, color: "#f59e0b" },
+    { name: "Idle", value: 8, color: "#6b7280" },
+    { name: "Error", value: 2, color: "#ef4444" },
+  ];
+
+  const anomalyData = [
+    { time: "2024-01-01", count: 3, severity: "low" },
+    { time: "2024-01-02", count: 1, severity: "medium" },
+    { time: "2024-01-03", count: 7, severity: "high" },
+    { time: "2024-01-04", count: 2, severity: "low" },
+    { time: "2024-01-05", count: 5, severity: "medium" },
+  ];
 
   const kpiData = [
     {
@@ -238,7 +323,10 @@ const Analytics = () => {
                           className={`${colors[index]} rounded-t w-8 transition-all hover:scale-110 hover:shadow-lg`}
                           style={{ height: `${(point.value / 100) * 180}px` }}
                         ></div>
-                        <div className="text-xs text-muted-foreground font-medium">{point.time}</div>
+                        <Badge variant="outline" className="text-xs">
+                          {point.value}%
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">{point.time}</span>
                       </div>
                     );
                   })}
@@ -247,76 +335,126 @@ const Analytics = () => {
             </CardContent>
           </Card>
 
-          {/* Real-time Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Real-time Telemetry */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Real-time Throughput</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Thermometer className="w-5 h-5 text-red-500" />
+                  Real-time Telemetry
+                </CardTitle>
+                <CardDescription>Live sensor data from digital twins</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Data Ingestion</span>
-                    <span className="font-mono text-sm">1,234.56 MB/s</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Processing Queue</span>
-                    <span className="font-mono text-sm">45 items</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Output Rate</span>
-                    <span className="font-mono text-sm">987.65 operations/s</span>
-                  </div>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={realTimeData.length > 0 ? realTimeData : telemetryData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="time" />
+                      <YAxis />
+                      <Tooltip />
+                      <Line type="monotone" dataKey="temperature" stroke="#ef4444" strokeWidth={2} />
+                      <Line type="monotone" dataKey="pressure" stroke="#3b82f6" strokeWidth={2} />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Resource Utilization</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Target className="w-5 h-5 text-blue-500" />
+                  Performance Metrics
+                </CardTitle>
+                <CardDescription>Target vs actual performance</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm">CPU Usage</span>
-                      <span className="text-sm font-bold text-orange-600">73%</span>
+                  {performanceMetrics.map((metric, index) => (
+                    <div key={index} className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">{metric.name}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">{metric.value}%</span>
+                          <Badge variant={
+                            metric.status === 'success' ? 'default' : 
+                            metric.status === 'warning' ? 'secondary' : 'destructive'
+                          }>
+                            {metric.status}
+                          </Badge>
+                        </div>
+                      </div>
+                      <Progress value={metric.value} className="h-2" />
+                      <div className="text-xs text-muted-foreground">
+                        Target: {metric.target}%
+                      </div>
                     </div>
-                    <div className="w-full bg-secondary rounded-full h-3">
-                      <div className="bg-gradient-to-r from-orange-500 to-orange-400 h-3 rounded-full transition-all duration-500" style={{ width: "73%" }}></div>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm">Memory</span>
-                      <span className="text-sm">62%</span>
-                    </div>
-                    <div className="w-full bg-secondary rounded-full h-2">
-                      <div className="bg-info h-2 rounded-full" style={{ width: "62%" }}></div>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm">Storage</span>
-                      <span className="text-sm">45%</span>
-                    </div>
-                    <div className="w-full bg-secondary rounded-full h-2">
-                      <div className="bg-success h-2 rounded-full" style={{ width: "45%" }}></div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
           </div>
+
+          {/* System Status Distribution */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Activity className="w-5 h-5 text-green-500" />
+                System Status Distribution
+              </CardTitle>
+              <CardDescription>Current operational status breakdown</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={distributionData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {distributionData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="space-y-3">
+                  {distributionData.map((item, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-accent/10">
+                      <div className="flex items-center gap-3">
+                        <div 
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: item.color }}
+                        />
+                        <span className="font-medium">{item.name}</span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">{item.value}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="usage" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Resource Usage Statistics</CardTitle>
-              <CardDescription>
-                Current utilization across all system components
-              </CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                <Database className="w-5 h-5 text-purple-500" />
+                Resource Usage Statistics
+              </CardTitle>
+              <CardDescription>Current utilization of system resources</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
@@ -324,19 +462,43 @@ const Analytics = () => {
                   <div key={index} className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="font-medium">{stat.category}</span>
-                      <div className="text-sm text-muted-foreground">
+                      <span className="text-sm text-muted-foreground">
                         {stat.active} / {stat.total} active
-                      </div>
+                      </span>
                     </div>
-                    <div className="w-full bg-secondary rounded-full h-3">
-                      <div 
-                        className="bg-gradient-to-r from-primary to-primary-glow h-3 rounded-full transition-all"
-                        style={{ width: `${stat.percentage}%` }}
-                      ></div>
-                    </div>
-                    <div className="text-right text-sm text-muted-foreground">
+                    <Progress value={stat.percentage} className="h-2" />
+                    <div className="text-xs text-muted-foreground">
                       {stat.percentage}% utilization
                     </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <HardDrive className="w-5 h-5 text-orange-500" />
+                System Health Monitor
+              </CardTitle>
+              <CardDescription>Real-time system health metrics</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {[
+                  { name: "CPU Usage", value: 67, icon: Cpu, color: "text-red-500" },
+                  { name: "Memory", value: 43, icon: HardDrive, color: "text-blue-500" },
+                  { name: "Network", value: 89, icon: Wifi, color: "text-green-500" },
+                  { name: "Storage", value: 34, icon: Database, color: "text-purple-500" },
+                ].map((metric, index) => (
+                  <div key={index} className="p-4 rounded-lg border">
+                    <div className="flex items-center gap-3 mb-3">
+                      <metric.icon className={`w-5 h-5 ${metric.color}`} />
+                      <span className="font-medium">{metric.name}</span>
+                    </div>
+                    <div className="text-2xl font-bold mb-2">{metric.value}%</div>
+                    <Progress value={metric.value} className="h-2" />
                   </div>
                 ))}
               </div>
@@ -347,31 +509,56 @@ const Analytics = () => {
         <TabsContent value="alerts" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-yellow-500" />
                 System Alerts & Notifications
-                <Badge variant="outline">{alertsData.length} active</Badge>
               </CardTitle>
+              <CardDescription>Recent alerts and system notifications</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {alertsData.map((alert) => (
-                  <div key={alert.id} className="flex items-start gap-4 p-4 border border-border rounded-lg">
+                  <div key={alert.id} className="flex items-start gap-4 p-4 rounded-lg border">
                     {getAlertIcon(alert.type)}
-                    <div className="flex-1 space-y-1">
-                      <div className="flex items-center gap-2">
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start mb-2">
                         <h4 className="font-medium">{alert.title}</h4>
-                        <Badge variant={getSeverityBadge(alert.severity)}>
-                          {alert.severity}
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <Badge variant={getSeverityBadge(alert.severity)}>
+                            {alert.severity}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">
+                            {alert.timestamp}
+                          </span>
+                        </div>
                       </div>
                       <p className="text-sm text-muted-foreground">{alert.description}</p>
-                      <p className="text-xs text-muted-foreground">{alert.timestamp}</p>
                     </div>
-                    <Button variant="outline" size="sm">
-                      <Eye className="w-4 h-4" />
-                    </Button>
                   </div>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Activity className="w-5 h-5 text-red-500" />
+                Anomaly Detection
+              </CardTitle>
+              <CardDescription>AI-powered anomaly detection results</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={anomalyData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="time" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="count" fill="#ef4444" />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
@@ -380,33 +567,28 @@ const Analytics = () => {
         <TabsContent value="reports" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Automated Reports</CardTitle>
-              <CardDescription>
-                Generate and schedule comprehensive system reports
-              </CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                <Eye className="w-5 h-5 text-indigo-500" />
+                Analytics Reports
+              </CardTitle>
+              <CardDescription>Generated reports and insights</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
-                  { name: "Daily Performance Summary", type: "Automated", frequency: "Daily at 9 AM" },
-                  { name: "Weekly IoT Device Status", type: "Scheduled", frequency: "Mondays at 8 AM" },
-                  { name: "Monthly Resource Utilization", type: "Scheduled", frequency: "1st of each month" },
-                  { name: "Quarterly Business Intelligence", type: "Manual", frequency: "On demand" },
+                  { title: "Performance Report", description: "Weekly performance analysis", date: "2024-01-15" },
+                  { title: "Energy Efficiency", description: "Energy consumption patterns", date: "2024-01-14" },
+                  { title: "Predictive Maintenance", description: "Upcoming maintenance predictions", date: "2024-01-13" },
+                  { title: "Cost Analysis", description: "Operational cost breakdown", date: "2024-01-12" },
                 ].map((report, index) => (
-                  <div key={index} className="p-4 border border-border rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-medium">{report.name}</h4>
-                      <Badge variant="outline">{report.type}</Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-3">{report.frequency}</p>
-                    <div className="flex gap-2">
+                  <div key={index} className="p-4 rounded-lg border">
+                    <h4 className="font-medium mb-2">{report.title}</h4>
+                    <p className="text-sm text-muted-foreground mb-3">{report.description}</p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-muted-foreground">{report.date}</span>
                       <Button variant="outline" size="sm">
-                        <Download className="w-4 h-4 mr-2" />
+                        <Download className="w-3 h-3 mr-1" />
                         Download
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Eye className="w-4 h-4 mr-2" />
-                        View
                       </Button>
                     </div>
                   </div>
