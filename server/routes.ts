@@ -8,6 +8,9 @@ import {
   insertWorkflowSchema, 
   insertApiConnectionSchema 
 } from "@shared/schema";
+import { dittoClient } from "./integrations/ditto";
+import { mqttClient } from "./integrations/mqtt";
+import { nodeRedClient } from "./integrations/node-red";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Generate 3D twin model from prompt

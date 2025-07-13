@@ -1,0 +1,128 @@
+version: '3.8'
+services:
+  # Eclipse Ditto - Digital Twin State Management
+  ditto-mongodb:
+    image: mongo:4.4
+    networks:
+      - ditto-net
+    command: mongod --replSet rs0 --oplogSize 128
+    volumes:
+      - ditto-mongodb-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=ditto
+      - MONGO_INITDB_ROOT_PASSWORD=ditto
+
+  ditto-policies:
+    image: eclipse/ditto-policies:latest
+    networks:
+      - ditto-net
+    depends_on:
+      - ditto-mongodb
+    environment:
+      - MONGO_DB_URI=mongodb://ditto:ditto@ditto-mongodb:27017/policies?authSource=admin
+      - DITTO_DEVOPS_PASSWORD=devops!ditto
+
+  ditto-things:
+    image: eclipse/ditto-things:latest
+    networks:
+      - ditto-net
+    depends_on:
+      - ditto-mongodb
+    environment:
+      - MONGO_DB_URI=mongodb://ditto:ditto@ditto-mongodb:27017/things?authSource=admin
+      - DITTO_DEVOPS_PASSWORD=devops!ditto
+
+  ditto-gateway:
+    image: eclipse/ditto-gateway:latest
+    networks:
+      - ditto-net
+    ports:
+      - "8080:8080"
+    depends_on:
+      - ditto-policies
+      - ditto-things
+    environment:
+      - DITTO_DEVOPS_PASSWORD=devops!ditto
+
+  # MQTT Broker for IoT Communication
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    networks:
+      - ditto-net
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+
+  # Node-RED for Visual Workflow Building
+  node-red:
+    image: nodered/node-red:latest
+    networks:
+      - ditto-net
+    ports:
+      - "1880:1880"
+    volumes:
+      - node-red-data:/data
+    depends_on:
+      - mosquitto
+      - ditto-gateway
+
+  # InfluxDB for Time Series Data
+  influxdb:
+    image: influxdb:2.0
+    networks:
+      - ditto-net
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+    environment:
+      - INFLUXDB_DB=stahiki
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin123
+
+  # Grafana for Telemetry Dashboards
+  grafana:
+    image: grafana/grafana:latest
+    networks:
+      - ditto-net
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+
+  # Main Stahiki Application
+  stahiki-app:
+    build: .
+    networks:
+      - ditto-net
+    ports:
+      - "5000:5000"
+    depends_on:
+      - ditto-gateway
+      - mosquitto
+      - node-red
+      - influxdb
+    environment:
+      - DITTO_BASE_URL=http://ditto-gateway:8080
+      - MQTT_BROKER=mosquitto
+      - INFLUXDB_URL=http://influxdb:8086
+      - NODE_RED_URL=http://node-red:1880
+      - GRAFANA_URL=http://grafana:3000
+
+volumes:
+  ditto-mongodb-data:
+  node-red-data:
+  influxdb-data:
+  grafana-data:
+
+networks:
+  ditto-net:
+    driver: bridge
