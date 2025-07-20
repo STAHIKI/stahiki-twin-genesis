@@ -24,18 +24,37 @@ interface TwinModel3D {
   id: string;
   name: string;
   description: string;
-  vertices: number[][];
-  faces: number[][];
-  materials: {
-    color: string;
+  type?: string;
+  geometry?: {
+    vertices: number[][];
+    faces: number[][];
+    normals?: number[][];
+    uvs?: number[][];
+  };
+  materials?: {
+    diffuse?: string;
+    color?: string;
     metalness: number;
     roughness: number;
+    opacity?: number;
+    emissive?: string;
+  };
+  lighting?: any;
+  environment?: any;
+  physics?: any;
+  metadata?: {
+    complexity?: string;
+    polygonCount?: number;
+    renderSettings?: any;
   };
   bounds: {
     min: [number, number, number];
     max: [number, number, number];
   };
   createdAt: string;
+  // Legacy support
+  vertices?: number[][];
+  faces?: number[][];
 }
 
 const AiInputPanel = () => {

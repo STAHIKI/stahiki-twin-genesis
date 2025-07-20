@@ -17,18 +17,33 @@ interface TwinModel3D {
   id: string;
   name: string;
   description: string;
-  vertices: number[][];
-  faces: number[][];
-  materials: {
-    color: string;
+  type?: string;
+  geometry?: {
+    vertices: number[][];
+    faces: number[][];
+    normals?: number[][];
+    uvs?: number[][];
+  };
+  materials?: {
+    diffuse?: string;
+    color?: string;
     metalness: number;
     roughness: number;
+    opacity?: number;
+    emissive?: string;
   };
   bounds: {
     min: [number, number, number];
     max: [number, number, number];
   };
+  metadata?: {
+    complexity?: string;
+    polygonCount?: number;
+  };
   createdAt: string;
+  // Legacy support
+  vertices?: number[][];
+  faces?: number[][];
 }
 
 interface Model3DProps {
@@ -56,7 +71,14 @@ function Simple3DModel({ model, autoRotate = false, className = "" }: Model3DPro
 
   // Render a simple wireframe representation of the model
   const renderWireframe = () => {
-    const { vertices, faces } = model;
+    // Handle both new and legacy model formats
+    const vertices = model.geometry?.vertices || model.vertices || [];
+    const faces = model.geometry?.faces || model.faces || [];
+    
+    if (!vertices.length || !faces.length) {
+      return <text x="150" y="150" textAnchor="middle" className="fill-gray-400">No geometry data</text>;
+    }
+    
     const scale = zoom * 50;
     const centerX = 150;
     const centerY = 150;
@@ -89,7 +111,7 @@ function Simple3DModel({ model, autoRotate = false, className = "" }: Model3DPro
                 key={faceIndex}
                 d={pathData}
                 fill="none"
-                stroke={model.materials.color}
+                stroke={model.materials?.diffuse || model.materials?.color || '#00ff00'}
                 strokeWidth="1"
                 opacity="0.7"
               />
@@ -167,16 +189,37 @@ export default function Model3DViewer({ model, isGenerating = false, className =
           <div className="space-y-1 text-xs">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Vertices:</span>
-              <Badge variant="outline" className="text-xs">{model.vertices.length}</Badge>
+              <Badge variant="outline" className="text-xs">
+                {(model.geometry?.vertices || model.vertices || []).length}
+              </Badge>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Faces:</span>
-              <Badge variant="outline" className="text-xs">{model.faces.length}</Badge>
+              <Badge variant="outline" className="text-xs">
+                {(model.geometry?.faces || model.faces || []).length}
+              </Badge>
             </div>
+            {model.metadata?.polygonCount && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Polygons:</span>
+                <Badge variant="outline" className="text-xs">{model.metadata.polygonCount}</Badge>
+              </div>
+            )}
             <div className="flex justify-between">
               <span className="text-muted-foreground">Material:</span>
-              <div className="w-4 h-4 rounded border" style={{ backgroundColor: model.materials.color }}></div>
+              <div 
+                className="w-4 h-4 rounded border" 
+                style={{ 
+                  backgroundColor: model.materials?.diffuse || model.materials?.color || '#808080' 
+                }}
+              ></div>
             </div>
+            {model.type && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Type:</span>
+                <Badge variant="secondary" className="text-xs">{model.type}</Badge>
+              </div>
+            )}
           </div>
         </div>
       )}
