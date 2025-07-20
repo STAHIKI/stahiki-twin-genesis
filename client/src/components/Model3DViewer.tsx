@@ -141,9 +141,9 @@ export default function Model3DViewer({ model, isGenerating = false, className =
   const [showInfo, setShowInfo] = useState(false);
 
   const ViewerContent = ({ isFullscreenMode = false }: { isFullscreenMode?: boolean }) => (
-    <div className={`relative ${isFullscreenMode ? 'h-full' : 'h-96'} bg-gradient-to-br from-background to-accent/20 rounded-lg border border-border/50 overflow-hidden`}>
+    <div className={`relative ${isFullscreenMode ? 'h-full' : 'h-64 sm:h-80 lg:h-96'} bg-gradient-to-br from-background to-accent/20 rounded-lg border border-border/50 overflow-hidden`}>
       {/* Controls Overlay */}
-      <div className="absolute top-4 right-4 z-10 flex gap-2">
+      <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 flex gap-1 sm:gap-2">
         <Button
           variant="outline"
           size="sm"
@@ -183,7 +183,7 @@ export default function Model3DViewer({ model, isGenerating = false, className =
 
       {/* Model Info Overlay */}
       {showInfo && model && (
-        <div className="absolute top-4 left-4 z-10 bg-background/90 backdrop-blur-sm rounded-lg p-4 max-w-sm">
+        <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10 bg-background/90 backdrop-blur-sm rounded-lg p-3 sm:p-4 max-w-xs sm:max-w-sm">
           <h4 className="font-semibold text-foreground mb-2">{model.name}</h4>
           <p className="text-sm text-muted-foreground mb-3">{model.description}</p>
           <div className="space-y-1 text-xs">

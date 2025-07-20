@@ -84,28 +84,28 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-card to-accent/20 rounded-xl p-8 border border-border">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">
-              Digital Twin Cursor
+      <div className="bg-gradient-to-r from-card to-accent/20 rounded-xl p-4 sm:p-8 border border-border">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex-1">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2">
+              Digital Twin Platform
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl">
+            <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
               An intuitive, fluid, and powerful interface for digital twin creation that combines 
               workflow automation with 3D modeling capabilities.
             </p>
           </div>
-          <Button variant="glow" size="lg" className="gap-2" onClick={() => setActiveView("twin-creator")}>
-            <Play className="w-5 h-5" />
-            Start Building
+          <Button variant="glow" size="lg" className="gap-2 w-full sm:w-auto" onClick={() => setActiveView("twin-creator")}>
+            <Play className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-sm sm:text-base">Start Building</span>
           </Button>
         </div>
       </div>
 
       {/* KPIs Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         {kpis.map((kpi, index) => {
           const colors = [
             { bg: "bg-emerald-500/10", icon: "text-emerald-500", border: "border-emerald-500/20" },
@@ -137,7 +137,7 @@ const Dashboard = () => {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Industry-Specific Modules */}
         <Card className="lg:col-span-2">
           <CardHeader>
@@ -145,7 +145,7 @@ const Dashboard = () => {
             <CardDescription>Choose your domain to get started with specialized tools</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div 
                 className="p-6 rounded-lg bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 transition-all cursor-pointer group"
                 onClick={() => setActiveView("twin-creator")}

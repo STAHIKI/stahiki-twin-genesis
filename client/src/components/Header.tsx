@@ -30,28 +30,33 @@ const Header = () => {
     }
   };
   return (
-    <header className="h-16 bg-card/95 backdrop-blur-sm border-b border-border flex items-center justify-between px-6 sticky top-0 z-40">
+    <header className="h-14 sm:h-16 bg-card/95 backdrop-blur-sm border-b border-border flex items-center justify-between px-3 sm:px-6 sticky top-0 z-40">
       {/* Left Section - Current View */}
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-3">
-          <Activity className="w-5 h-5 text-primary" />
-          <h1 className="text-lg font-semibold text-foreground">{getActiveViewTitle()}</h1>
+      <div className="flex items-center gap-3 sm:gap-6">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+          <h1 className="text-base sm:text-lg font-semibold text-foreground">{getActiveViewTitle()}</h1>
         </div>
       </div>
 
       {/* Center Section - Search */}
-      <div className="flex-1 max-w-md mx-8 hidden md:block">
+      <div className="flex-1 max-w-md mx-4 sm:mx-8 hidden md:block">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 
             placeholder="Search twins, workflows, or ask AI..." 
-            className="pl-10 bg-background/50 border-border/50"
+            className="pl-10 bg-background/50 border-border/50 text-sm"
           />
         </div>
       </div>
 
       {/* Right Section - Actions */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Mobile Search Button */}
+        <Button variant="ghost" size="sm" className="md:hidden p-2">
+          <Search className="w-4 h-4" />
+        </Button>
+        
         <Button 
           variant="glow" 
           size="sm" 
@@ -66,13 +71,13 @@ const Header = () => {
         <Button 
           variant="glow" 
           size="sm" 
-          className="sm:hidden"
+          className="sm:hidden p-2"
           onClick={() => setActiveView("twin-creator")}
         >
           <Plus className="w-4 h-4" />
         </Button>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           <Button variant="ghost" size="sm" className="relative">
             <Bell className="w-4 h-4" />
             <Badge className="absolute -top-1 -right-1 w-2 h-2 p-0 bg-primary"></Badge>

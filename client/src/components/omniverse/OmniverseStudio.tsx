@@ -250,11 +250,11 @@ const OmniverseStudio: React.FC<OmniverseStudioProps> = ({
   const selectedObject = sceneObjects.find(obj => obj.id === selectedObjectId);
 
   return (
-    <div className="h-screen flex flex-col bg-gray-900 text-white">
+    <div className="h-screen flex flex-col bg-gray-900 text-white overflow-hidden">
       {/* Top Toolbar */}
-      <div className="flex items-center justify-between p-3 bg-gray-800 border-b border-gray-700">
-        <div className="flex items-center gap-4">
-          <h1 className="text-lg font-bold text-white">Stahiki Omniverse Studio</h1>
+      <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-800 border-b border-gray-700">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <h1 className="text-sm sm:text-lg font-bold text-white">Stahiki Omniverse Studio</h1>
           <Badge variant="outline" className="border-green-500 text-green-400">
             {viewportSettings.renderer}
           </Badge>
@@ -266,14 +266,20 @@ const OmniverseStudio: React.FC<OmniverseStudioProps> = ({
           )}
         </div>
         
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+        <div className="flex items-center gap-1 sm:gap-2">
+          <Button variant="outline" size="sm" className="hidden sm:flex">
             <Upload className="w-4 h-4 mr-1" />
             Import USD
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="hidden sm:flex">
             <Download className="w-4 h-4 mr-1" />
             Export
+          </Button>
+          <Button variant="outline" size="sm" className="sm:hidden p-2">
+            <Upload className="w-4 h-4" />
+          </Button>
+          <Button variant="outline" size="sm" className="sm:hidden p-2">
+            <Download className="w-4 h-4" />
           </Button>
           <Separator orientation="vertical" className="h-6" />
           <Button 
@@ -295,7 +301,7 @@ const OmniverseStudio: React.FC<OmniverseStudioProps> = ({
       {/* Main Content */}
       <div className="flex-1 flex">
         {/* Left Panel - Scene Hierarchy & Content Browser */}
-        <div className="w-80 bg-gray-800 border-r border-gray-700 flex flex-col">
+        <div className="w-64 lg:w-80 bg-gray-800 border-r border-gray-700 flex flex-col hidden md:flex">
           <Tabs defaultValue="hierarchy" className="flex-1">
             <TabsList className="grid w-full grid-cols-2 bg-gray-700">
               <TabsTrigger value="hierarchy">Hierarchy</TabsTrigger>
@@ -501,7 +507,7 @@ const OmniverseStudio: React.FC<OmniverseStudioProps> = ({
         </div>
 
         {/* Right Panel - Properties & Materials */}
-        <div className="w-80 bg-gray-800 border-l border-gray-700">
+        <div className="w-64 lg:w-80 bg-gray-800 border-l border-gray-700 hidden lg:block">
           <Tabs defaultValue="properties" className="h-full">
             <TabsList className="grid w-full grid-cols-3 bg-gray-700">
               <TabsTrigger value="properties">Properties</TabsTrigger>

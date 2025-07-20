@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useNavigation } from "@/lib/contexts/NavigationContext";
 import { 
   Diamond, 
@@ -17,12 +18,15 @@ import {
   Play,
   Database,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Menu,
+  X
 } from "lucide-react";
 
 const Navigation = () => {
   const { activeView, setActiveView } = useNavigation();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   
   const navItems = [
     { icon: Home, label: "Dashboard", key: "dashboard", color: "text-blue-500", bgColor: "bg-blue-500/10" },
@@ -35,8 +39,77 @@ const Navigation = () => {
     { icon: Layers3, label: "API Connections", key: "api", color: "text-violet-500", bgColor: "bg-violet-500/10" },
   ];
 
-  return (
-    <div className={`${isCollapsed ? 'w-16' : 'w-64'} h-screen bg-card border-r border-border flex flex-col sticky top-0 transition-all duration-300 ease-in-out shrink-0 relative`}>
+  const handleNavItemClick = (key: string) => {
+    setActiveView(key);
+    setIsMobileOpen(false); // Close mobile menu when item is selected
+  };
+
+  // Mobile Navigation Component
+  const MobileNav = () => (
+    <div className="lg:hidden">
+      <div className="flex items-center justify-between p-4 bg-card border-b border-border">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
+            <Diamond className="w-5 h-5 text-primary-foreground" />
+          </div>
+          <span className="text-xl font-bold text-foreground">Stahiki</span>
+        </div>
+        
+        <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="sm" className="p-2">
+              <Menu className="w-5 h-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-64 p-0">
+            <div className="flex flex-col h-full">
+              {/* Header */}
+              <div className="p-6 border-b border-border">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
+                      <Diamond className="w-5 h-5 text-primary-foreground" />
+                    </div>
+                    <span className="text-xl font-bold text-foreground">Stahiki</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Navigation Items */}
+              <div className="flex-1 p-4 space-y-2">
+                {navItems.map((item, index) => (
+                  <Button
+                    key={index}
+                    variant={activeView === item.key ? "default" : "ghost"}
+                    className={`w-full justify-start gap-3 h-12 ${activeView === item.key ? '' : 'hover:' + item.bgColor}`}
+                    onClick={() => handleNavItemClick(item.key)}
+                  >
+                    <item.icon className={`w-5 h-5 ${activeView === item.key ? 'text-white' : item.color}`} />
+                    <span className="text-sm font-medium">{item.label}</span>
+                  </Button>
+                ))}
+              </div>
+
+              {/* Mobile Footer */}
+              <div className="p-4 border-t border-border">
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-accent/20">
+                  <User className="w-5 h-5 text-muted-foreground" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate">User Account</p>
+                    <p className="text-xs text-muted-foreground">Digital Twin Platform</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </div>
+  );
+
+  // Desktop Navigation Component  
+  const DesktopNav = () => (
+    <div className={`${isCollapsed ? 'w-16' : 'w-64'} h-screen bg-card border-r border-border flex flex-col sticky top-0 transition-all duration-300 ease-in-out shrink-0 relative hidden lg:flex`}>
       {/* Small Toggle Button - Strategically positioned */}
       <Button
         variant="ghost"
@@ -73,7 +146,7 @@ const Navigation = () => {
             title={isCollapsed ? item.label : undefined}
           >
             <item.icon className={`w-5 h-5 ${activeView === item.key ? 'text-white' : item.color} transition-colors duration-200`} />
-            {!isCollapsed && <span className={activeView === item.key ? 'text-white' : 'text-foreground'}>{item.label}</span>}
+            {!isCollapsed && <span className="text-sm font-medium">{item.label}</span>}
             {isCollapsed && (
               <div className="absolute left-12 bg-card border border-border rounded px-2 py-1 text-xs text-foreground opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
                 {item.label}
@@ -138,6 +211,13 @@ const Navigation = () => {
         )}
       </div>
     </div>
+  );
+
+  return (
+    <>
+      <MobileNav />
+      <DesktopNav />
+    </>
   );
 };
 
