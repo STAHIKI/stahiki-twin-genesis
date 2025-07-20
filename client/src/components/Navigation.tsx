@@ -29,6 +29,7 @@ const Navigation = () => {
     { icon: Zap, label: "AI Input", key: "ai-input", color: "text-purple-500", bgColor: "bg-purple-500/10" },
     { icon: Diamond, label: "Twin Creator", key: "twin-creator", color: "text-emerald-500", bgColor: "bg-emerald-500/10" },
     { icon: Workflow, label: "Workflow Builder", key: "workflow", color: "text-orange-500", bgColor: "bg-orange-500/10" },
+    { icon: Database, label: "Omniverse Studio", key: "omniverse", color: "text-green-500", bgColor: "bg-green-500/10" },
     { icon: Play, label: "Live Simulation", key: "simulation", color: "text-pink-500", bgColor: "bg-pink-500/10" },
     { icon: Wifi, label: "IoT Integration", key: "iot", color: "text-cyan-500", bgColor: "bg-cyan-500/10" },
     { icon: Layers3, label: "API Connections", key: "api", color: "text-violet-500", bgColor: "bg-violet-500/10" },

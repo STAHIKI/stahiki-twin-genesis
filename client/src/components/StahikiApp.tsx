@@ -10,6 +10,7 @@ import IoTIntegration from "./IoTIntegration";
 import APIConnections from "./APIConnections";
 import Analytics from "./Analytics";
 import Settings from "./Settings";
+import OmniverseStudio from "./omniverse/OmniverseStudio";
 import { NavigationProvider, useNavigation } from "@/lib/contexts/NavigationContext";
 
 const StahikiApp = () => {
@@ -33,6 +34,8 @@ const StahikiApp = () => {
         return <APIConnections />;
       case "analytics":
         return <Analytics />;
+      case "omniverse":
+        return <OmniverseStudio collaborationMode={true} />;
       case "settings":
         return <Settings />;
       default:
