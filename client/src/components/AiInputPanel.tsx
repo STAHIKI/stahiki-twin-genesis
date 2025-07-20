@@ -218,7 +218,7 @@ const AiInputPanel = () => {
                 <span>Model Preview</span>
                 {generatedModel && (
                   <Badge variant="secondary" className="text-xs">
-                    {generatedModel.vertices.length} vertices
+                    {(generatedModel.geometry?.vertices || generatedModel.vertices || []).length} vertices
                   </Badge>
                 )}
               </CardTitle>
